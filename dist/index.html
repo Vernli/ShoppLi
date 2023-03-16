@@ -43,28 +43,29 @@
             placeholder="Enter your item"
             class="text-black bg-gray-100 p-2 outline-none focus:bg-white col-span-4"
           />
-          <!--  Amount -->
+          <!-- Amount -->
           <input
             type="number"
+            value="1"
             name=""
             id="amount"
             max="999"
-            placeholder="Amount"
-            class="text-black bg-gray-100 p-2 outline-none focus:bg-white"
+            class="text-black bg-gray-100 px-2 outline-none focus:bg-white border-l-2"
           />
         </div>
 
-        <div class="grid grid-cols-2 h-8">
+        <div class="grid h-8">
           <button
             class="text-white bg-indigo-600 hover:bg-indigo-500 duration-150 outline-none shadow-md"
           >
             Add Item
           </button>
-          <button
+          <!-- Update Button -->
+          <!-- <button
             class="text-white bg-gray-400 duration-150 outline-none shadow-md"
           >
             Update Item
-          </button>
+          </button> -->
         </div>
       </form>
     </header>
@@ -72,33 +73,67 @@
     <section>
       <!-- Search -->
       <div class="flex flex-col mt-2 items-center justify-center">
-        <input
+        <!-- <input
           type="text"
           placeholder="Filter"
-          class="text-black w-4/5 p-1 rounded-lg outline-none hidden"
-        />
+          class="text-black w-4/5 p-1 rounded-lg outline-none"
+        /> -->
 
-        <ul id="items-list" class="p-2 space-y-2 w-full">
-          <li
-            class="bg-white border-2 border-gray-800 text-gray-700 rounded-lg text-lg text-center tracking-wider capitalize"
-          >
-            1 Mleko
-            <span class="">3</span>
-            <button class="w-12 h-full">
-              <i class="fa-solid fa-trash fa-xs text-indigo-600"></i>
-            </button>
-            <button class="w-12 h-full">
-              <i class="fa-solid fa-wrench fa-xs text-indigo-600"></i>
-            </button>
-          </li>
-        </ul>
+        <table class="bg-white w-3/4 text-center border-black rounded-xl mt-2">
+          <thead class="uppercase">
+            <th class="p-2">Product</th>
+            <th class="p-2">Amount</th>
+            <th class="p-2">Action</th>
+          </thead>
+          <tbody class="font-normal">
+            <tr class="item">
+              <td>Milk</td>
+              <td>3</td>
+              <td>
+                <button>
+                  <i class="fa-solid fa-wrench fa-xs text-indigo-600"></i>
+                </button>
+
+                <button>
+                  <i class="ml-3 fa-solid fa-trash fa-xs text-indigo-600"></i>
+                </button>
+              </td>
+            </tr>
+            <tr class="item">
+              <td>Eggs</td>
+              <td>6</td>
+              <td>
+                <button>
+                  <i class="fa-solid fa-wrench fa-xs text-indigo-600"></i>
+                </button>
+
+                <button>
+                  <i class="ml-3 fa-solid fa-trash fa-xs text-indigo-600"></i>
+                </button>
+              </td>
+            </tr>
+            <tr class="item">
+              <td>Meat</td>
+              <td>1</td>
+              <td>
+                <button>
+                  <i class="fa-solid fa-wrench fa-xs text-indigo-600"></i>
+                </button>
+
+                <button>
+                  <i class="ml-3 fa-solid fa-trash fa-xs text-indigo-600"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button
+          class="rounded-b-lg text-white bg-gray-400 duration-150 outline-none shadow-md w-1/2"
+        >
+          Clear All
+        </button>
       </div>
     </section>
   </body>
 </html>
-
-<!-- <button
-class="text-white bg-gray-400 duration-150 outline-none shadow-md"
->
-Clear All
-</button> -->
