@@ -8,6 +8,8 @@ const itemInput = document.getElementById("item-input");
 const itemAmount = document.getElementById("item-amount");
 const itemForm = document.getElementById("item-form");
 const itemSection = document.getElementById("items-section");
+// ???
+const items = document.querySelectorAll(".item");
 
 function checkItems() {
   return document.querySelectorAll(".item").length;
@@ -46,6 +48,18 @@ function checkTable() {
 
 function addItem(e) {
   e.preventDefault();
+  // Popraw
+  if (itemInput.value === "") {
+    alert("Add something!");
+    return;
+  }
+  if (itemAmount.value == 0) {
+    itemAmount.value = 1;
+    alert("Amount is equal 0");
+    return;
+  }
+  // Koniec
+
   const tr = document.createElement("tr");
   tr.className = "item";
 
@@ -78,9 +92,14 @@ function removeItem(item) {
   checkTable(); // ma usunac filter/table/clear
 }
 
-function editItem(item) {
-  console.log(item);
+function clearAll() {
+  document.querySelectorAll(".item").forEach((el) => el.remove());
+  checkTable();
 }
+
+// Zrob
+function editItem(item) {}
+// Koniec
 
 function onClickItem(e) {
   if (e.target.classList.contains("remove-item"))
@@ -93,3 +112,4 @@ function onClickItem(e) {
 checkTable();
 itemForm.addEventListener("submit", addItem);
 itemSection.addEventListener("click", onClickItem);
+clearBtn.addEventListener("click", clearAll);
