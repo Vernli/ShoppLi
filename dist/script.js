@@ -68,6 +68,7 @@ function addItem(e) {
 
   if (isEditMode) {
     const itemToEdit = itemSection.querySelector(".edit-mode");
+    console.log(itemToEdit);
     itemToEdit.classList.remove("edit-mode");
     itemToEdit.remove();
 
@@ -119,13 +120,15 @@ function clearAll() {
   document.querySelectorAll(".item").forEach((el) => el.remove());
   checkTable();
 }
-// Fix
+// fix
 function editItem(item) {
-  editItem = true;
+  isEditMode = true;
   itemSection
     .querySelectorAll("tr")
     .forEach((i) => i.classList.remove("edit-mode"));
+  //
   item.classList.add("edit-mode");
+  console.log(item);
   formBtn.innerHTML = 'Update Item <i class="fa-solid fa-pen"></i>';
   formBtn.classList.remove("add-item");
   //Get Input and Quantify
@@ -135,9 +138,11 @@ function editItem(item) {
 }
 // Koniec
 function onClickItem(e) {
-  if (e.target.classList.contains("remove-item"))
+  console.log(e.target.parentElement.parentElement.parentElement);
+
+  if (e.target.classList.contains("remove-item")) {
     removeItem(e.target.parentElement.parentElement.parentElement);
-  else {
+  } else {
     editItem(e.target.parentElement.parentElement.parentElement);
   }
 }
