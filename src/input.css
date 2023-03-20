@@ -2,13 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .block-center {
+    @apply flex flex-col items-center justify-center;
+  }
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   opacity: 1;
 }
 
 .btn {
-  @apply w-full h-8 text-white bg-gray-400 duration-150 outline-none shadow-md;
+  @apply w-full  text-white bg-gray-400 duration-150 outline-none shadow-md;
 }
 
 .active {

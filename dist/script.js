@@ -8,12 +8,10 @@ const itemInput = document.getElementById("item-input");
 const itemAmount = document.getElementById("item-amount");
 const itemForm = document.getElementById("item-form");
 const itemSection = document.getElementById("items-section");
+
+let isEditMode = false;
 // ???
 const items = document.querySelectorAll(".item");
-
-function checkItems() {
-  return document.querySelectorAll(".item").length;
-}
 
 function createIcon(classes) {
   const icon = document.createElement("i");
@@ -46,31 +44,30 @@ function checkTable() {
   }
 }
 
-function addItem(e) {
+function checkItems() {
+  return document.querySelectorAll(".item").length;
+}
+
+function addItemDOM(e) {
   e.preventDefault();
-  // Popraw
-  if (itemInput.value === "") {
-    alert("Add something!");
+
+  const newItem = itemInput.value;
+  const amountOfItem = itemAmount.value;
+
+  if (newItem === "") {
+    alert("Input is empty !");
     return;
   }
-  if (itemAmount.value == 0) {
-    itemAmount.value = 1;
-    alert("Amount is equal 0");
-    return;
-  }
-  // Koniec
 
   const tr = document.createElement("tr");
   tr.className = "item";
-
   const td_buttons = document.createElement("td");
-
   const btnEdit = createButton(
-    "",
+    "btn-edit",
     "edit-item fa-solid fa-wrench fa-xs text-indigo-600"
   );
   const btnRemove = createButton(
-    "",
+    "btn-remove",
     "remove-item ml-3 fa-solid fa-trash fa-xs text-indigo-600"
   );
 
@@ -81,6 +78,8 @@ function addItem(e) {
   tr.appendChild(td_buttons);
 
   itemSection.appendChild(tr);
+
+  // ADD TO LOCAL STORAGE
   itemInput.value = "";
   itemAmount.value = 1;
 
@@ -88,17 +87,21 @@ function addItem(e) {
 }
 
 function removeItem(item) {
-  if (confirm("Are you sure?")) item.remove();
+  if (confirm("Are you sure?")) item.remove(); // + removeLocalStorage
   checkTable(); // ma usunac filter/table/clear
 }
 
+// Popraw
 function clearAll() {
   document.querySelectorAll(".item").forEach((el) => el.remove());
   checkTable();
 }
+// Koniec
 
 // Zrob
-function editItem(item) {}
+function editItem(e) {
+  console.log(e.textContent.trim().split(""));
+}
 // Koniec
 
 function onClickItem(e) {
@@ -110,6 +113,6 @@ function onClickItem(e) {
 }
 
 checkTable();
-itemForm.addEventListener("submit", addItem);
+itemForm.addEventListener("submit", addItemDOM);
 itemSection.addEventListener("click", onClickItem);
 clearBtn.addEventListener("click", clearAll);
