@@ -1,17 +1,16 @@
 // nie podoba
 const table = document.getElementById("items-table");
 const clearBtn = document.getElementById("clear-btn");
-const filterBtn = document.getElementById("filter");
+const filterInput = document.getElementById("filter");
+const formBtn = document.getElementById("formBtn");
 
 // podoba
 const itemInput = document.getElementById("item-input");
-const itemAmount = document.getElementById("item-amount");
+const itemQuantify = document.getElementById("item-quantify");
 const itemForm = document.getElementById("item-form");
 const itemSection = document.getElementById("items-section");
 
 let isEditMode = false;
-// ???
-const items = document.querySelectorAll(".item");
 
 function createIcon(classes) {
   const icon = document.createElement("i");
@@ -32,35 +31,66 @@ function createTd(item) {
   return td;
 }
 
+// Hide table
 function checkTable() {
   if (checkItems() == 0) {
     table.classList.add("hidden");
     clearBtn.classList.add("hidden");
-    filterBtn.classList.add("hidden");
+    filterInput.classList.add("hidden");
   } else {
     table.classList.remove("hidden");
     clearBtn.classList.remove("hidden");
-    filterBtn.classList.remove("hidden");
+    filterInput.classList.remove("hidden");
   }
+
+  formBtn.innerHTML = 'Add Item <i class="fa-solid fa-plus"></i>';
+  formBtn.classList.add("add-item");
+
+  isEditMode = false;
 }
 
+// Check items quantify
 function checkItems() {
   return document.querySelectorAll(".item").length;
 }
 
-function addItemDOM(e) {
+// Add Item
+function addItem(e) {
   e.preventDefault();
 
   const newItem = itemInput.value;
-  const amountOfItem = itemAmount.value;
+  const quantifyOfItem = itemQuantify.value;
 
   if (newItem === "") {
     alert("Input is empty !");
     return;
   }
 
+  if (isEditMode) {
+    const itemToEdit = itemSection.querySelector(".edit-mode");
+    itemToEdit.classList.remove("edit-mode");
+    itemToEdit.remove();
+
+    isEditMode = false;
+  }
+
+  onAddItemDOM(newItem, quantifyOfItem);
+
+  // ADD TO LOCAL STORAGE
+  //
+  itemInput.value = "";
+  itemQuantify.value = 1;
+  checkTable();
+}
+
+// Add Item to DOM
+function onAddItemDOM(item, quantify) {
   const tr = document.createElement("tr");
+  const td_item = createTd(document.createTextNode(item + " "));
+  const td_quantify = createTd(document.createTextNode(quantify));
   tr.className = "item";
+  td_item.className = "item-value";
+
   const td_buttons = document.createElement("td");
   const btnEdit = createButton(
     "btn-edit",
@@ -70,40 +100,40 @@ function addItemDOM(e) {
     "btn-remove",
     "remove-item ml-3 fa-solid fa-trash fa-xs text-indigo-600"
   );
-
   td_buttons.appendChild(btnEdit);
   td_buttons.appendChild(btnRemove);
-  tr.appendChild(createTd(document.createTextNode(itemInput.value)));
-  tr.appendChild(createTd(document.createTextNode(itemAmount.value)));
+
+  tr.appendChild(td_item);
+  tr.appendChild(td_quantify);
   tr.appendChild(td_buttons);
-
   itemSection.appendChild(tr);
-
-  // ADD TO LOCAL STORAGE
-  itemInput.value = "";
-  itemAmount.value = 1;
-
-  checkTable(); // ma sprawdzic i pokazac elementy filter/table/clearBtn
 }
 
+// Remove item
 function removeItem(item) {
   if (confirm("Are you sure?")) item.remove(); // + removeLocalStorage
   checkTable(); // ma usunac filter/table/clear
 }
 
-// Popraw
 function clearAll() {
   document.querySelectorAll(".item").forEach((el) => el.remove());
   checkTable();
 }
-// Koniec
-
-// Zrob
-function editItem(e) {
-  console.log(e.textContent.trim().split(""));
+// Fix
+function editItem(item) {
+  editItem = true;
+  itemSection
+    .querySelectorAll("tr")
+    .forEach((i) => i.classList.remove("edit-mode"));
+  item.classList.add("edit-mode");
+  formBtn.innerHTML = 'Update Item <i class="fa-solid fa-pen"></i>';
+  formBtn.classList.remove("add-item");
+  //Get Input and Quantify
+  const values = item.textContent.trim().split(" ");
+  itemQuantify.value = values.pop();
+  itemInput.value = values.pop();
 }
 // Koniec
-
 function onClickItem(e) {
   if (e.target.classList.contains("remove-item"))
     removeItem(e.target.parentElement.parentElement.parentElement);
@@ -111,8 +141,24 @@ function onClickItem(e) {
     editItem(e.target.parentElement.parentElement.parentElement);
   }
 }
+// Filtr
+function filterItems(e) {
+  const items = itemSection.querySelectorAll(".item-value");
+  console.log(items);
+  const text = e.target.value;
+  items.forEach((item) => {
+    const itemName = item.firstChild.textContent.toLowerCase();
+    if (itemName.indexOf(text) != -1) {
+      item.parentElement.style.display = "table-row";
+    } else {
+      item.parentElement.style.display = "none";
+    }
+  });
+}
 
+//
 checkTable();
-itemForm.addEventListener("submit", addItemDOM);
+itemForm.addEventListener("submit", addItem);
 itemSection.addEventListener("click", onClickItem);
+filterInput.addEventListener("input", filterItems);
 clearBtn.addEventListener("click", clearAll);

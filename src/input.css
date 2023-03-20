@@ -14,9 +14,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .btn {
-  @apply w-full  text-white bg-gray-400 duration-150 outline-none shadow-md;
+  @apply w-full  text-white bg-red-500 duration-150 outline-none shadow-md;
 }
 
-.active {
+.add-item {
   @apply bg-indigo-600 hover:bg-indigo-500;
 }

@@ -49,29 +49,23 @@
             placeholder="Enter your item"
             class="text-black bg-gray-100 p-2 outline-none focus:bg-white col-span-4 md:col-span-3 md:rounded-l-lg"
           />
-          <!-- Amount -->
+          <!-- Quantify -->
           <input
             type="number"
             value="1"
             name=""
-            id="item-amount"
+            id="item-quantify"
             min="1"
             max="999"
             class="text-black bg-gray-100 px-2 outline-none focus:bg-white border-l-2 text-center"
           />
           <button
             type="submit"
-            id="addItem"
-            class="btn active col-span-5 md:col-span-1 md:rounded-r-lg"
+            id="formBtn"
+            class="btn add-item col-span-5 md:col-span-1 md:rounded-r-lg"
           >
-            Add Item
+            Add Item <i class="fa-solid fa-plus"></i>
           </button>
-          <!-- Update Button -->
-          <!-- <button
-            class="btn deactive text-white bg-gray-400 duration-150 outline-none shadow-md"
-          >
-            Update Item
-          </button> -->
         </div>
       </form>
     </header>
@@ -93,12 +87,12 @@
         >
           <thead id="items-header" class="uppercase">
             <th class="p-2">Product</th>
-            <th class="p-2">Amount</th>
+            <th class="p-2">Quantify</th>
             <th class="p-2">Action</th>
           </thead>
           <tbody id="items-section" class="font-normal capitalize">
             <tr class="item">
-              <td>Milk</td>
+              <td class="item-value">Milk</td>
               <td>3</td>
               <td>
                 <button class="btn-edit">
@@ -115,7 +109,7 @@
               </td>
             </tr>
             <tr class="item">
-              <td>Milk</td>
+              <td class="item-value">Dilk</td>
               <td>3</td>
               <td>
                 <button class="btn-edit">
@@ -132,7 +126,7 @@
               </td>
             </tr>
             <tr class="item">
-              <td>Milk</td>
+              <td class="item-value">MWilkilk</td>
               <td>3</td>
               <td>
                 <button class="btn-edit">
