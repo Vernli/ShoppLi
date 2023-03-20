@@ -1,17 +1,36 @@
-// nie podoba
-const table = document.getElementById("items-table");
-const clearBtn = document.getElementById("clear-btn");
-const filterInput = document.getElementById("filter");
-const formBtn = document.getElementById("formBtn");
-
-// podoba
 const itemInput = document.getElementById("item-input");
 const itemQuantify = document.getElementById("item-quantify");
 const itemForm = document.getElementById("item-form");
 const itemSection = document.getElementById("items-section");
 
+const clearBtn = document.getElementById("clear-btn");
+const filterInput = document.getElementById("filter");
+const formBtn = document.getElementById("formBtn");
+
 let isEditMode = false;
 
+function zipToObject(item) {
+  const values = item.textContent.trim().split(" ");
+  return { item: values[0], quantify: values[1] };
+}
+
+function shallowEqual(object1, object2) {
+  const keys1 = Object.keys(object1);
+  const keys2 = Object.keys(object2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (let key of keys1) {
+    if (object1[key] !== object2[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Creation Block -- BEGIN
 function createIcon(classes) {
   const icon = document.createElement("i");
   icon.className = classes;
@@ -30,9 +49,12 @@ function createTd(item) {
   td.appendChild(item);
   return td;
 }
+// Creation Block -- END
 
 // Hide table
 function checkTable() {
+  const table = document.getElementById("items-table");
+
   if (checkItems() == 0) {
     table.classList.add("hidden");
     clearBtn.classList.add("hidden");
@@ -48,47 +70,91 @@ function checkTable() {
 
   isEditMode = false;
 }
-
 // Check items quantify
 function checkItems() {
   return document.querySelectorAll(".item").length;
 }
+// Get items from storage
+function getItemsFromStorage() {
+  let itemsFromStorage;
+  if (localStorage.getItem("items") == null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+  }
+  return itemsFromStorage;
+}
+// Local Storage
+function addItemsToStorage(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  console.log(item);
+
+  // Add new item to the storage
+  itemsFromStorage.push(item);
+
+  // Convert JSON string and set to local storage
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
+function checkIfItemwExists(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.map((i) => shallowEqual(item, i));
+  return;
+}
+
+function removeItemFromStorage(item) {
+  let itemsFromStorage = getItemsFromStorage();
+  // Filter out item to be removed
+  itemsFromStorage = itemsFromStorage.filter((i) => !shallowEqual(i, item));
+  // Re-set to local storage
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
+function displayFromStorage() {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.forEach((item) => {
+    onAddItemDOM(item);
+  });
+  checkTable();
+}
+// END
 
 // Add Item
 function addItem(e) {
   e.preventDefault();
 
-  const newItem = itemInput.value;
-  const quantifyOfItem = itemQuantify.value;
+  const inputs = { item: itemInput.value, quantify: itemQuantify.value };
 
-  if (newItem === "") {
+  if (inputs.item === "") {
     alert("Input is empty !");
     return;
   }
 
   if (isEditMode) {
     const itemToEdit = itemSection.querySelector(".edit-mode");
-    console.log(itemToEdit);
     itemToEdit.classList.remove("edit-mode");
     itemToEdit.remove();
 
     isEditMode = false;
+  } else {
+    if (checkIfItemwExists(inputs)) {
+      alert("That Item Already Exists");
+      return;
+    }
   }
+  onAddItemDOM(inputs);
+  addItemsToStorage(inputs);
 
-  onAddItemDOM(newItem, quantifyOfItem);
-
-  // ADD TO LOCAL STORAGE
-  //
   itemInput.value = "";
   itemQuantify.value = 1;
   checkTable();
 }
 
 // Add Item to DOM
-function onAddItemDOM(item, quantify) {
+function onAddItemDOM(item) {
   const tr = document.createElement("tr");
-  const td_item = createTd(document.createTextNode(item + " "));
-  const td_quantify = createTd(document.createTextNode(quantify));
+  const td_item = createTd(document.createTextNode(item.item + " "));
+  const td_quantify = createTd(document.createTextNode(item.quantify));
   tr.className = "item";
   td_item.className = "item-value";
 
@@ -112,15 +178,17 @@ function onAddItemDOM(item, quantify) {
 
 // Remove item
 function removeItem(item) {
-  if (confirm("Are you sure?")) item.remove(); // + removeLocalStorage
+  if (confirm("Are you sure?")) item.remove();
+  removeItemFromStorage(zipToObject(item));
   checkTable(); // ma usunac filter/table/clear
 }
 
 function clearAll() {
   document.querySelectorAll(".item").forEach((el) => el.remove());
+  localStorage.clear();
   checkTable();
 }
-// fix
+// Edit - FIX
 function editItem(item) {
   isEditMode = true;
   itemSection
@@ -128,7 +196,6 @@ function editItem(item) {
     .forEach((i) => i.classList.remove("edit-mode"));
   //
   item.classList.add("edit-mode");
-  console.log(item);
   formBtn.innerHTML = 'Update Item <i class="fa-solid fa-pen"></i>';
   formBtn.classList.remove("add-item");
   //Get Input and Quantify
@@ -136,10 +203,8 @@ function editItem(item) {
   itemQuantify.value = values.pop();
   itemInput.value = values.pop();
 }
-// Koniec
+// Add or Update
 function onClickItem(e) {
-  console.log(e.target.parentElement.parentElement.parentElement);
-
   if (e.target.classList.contains("remove-item")) {
     removeItem(e.target.parentElement.parentElement.parentElement);
   } else {
@@ -149,7 +214,6 @@ function onClickItem(e) {
 // Filtr
 function filterItems(e) {
   const items = itemSection.querySelectorAll(".item-value");
-  console.log(items);
   const text = e.target.value;
   items.forEach((item) => {
     const itemName = item.firstChild.textContent.toLowerCase();
@@ -161,9 +225,13 @@ function filterItems(e) {
   });
 }
 
-//
-checkTable();
-itemForm.addEventListener("submit", addItem);
-itemSection.addEventListener("click", onClickItem);
-filterInput.addEventListener("input", filterItems);
-clearBtn.addEventListener("click", clearAll);
+function Init() {
+  checkTable();
+  itemForm.addEventListener("submit", addItem);
+  itemSection.addEventListener("click", onClickItem);
+  filterInput.addEventListener("input", filterItems);
+  clearBtn.addEventListener("click", clearAll);
+  document.addEventListener("DOMContentLoaded", displayFromStorage);
+}
+
+Init();
