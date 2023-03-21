@@ -9,10 +9,10 @@ const formBtn = document.getElementById("formBtn");
 
 let isEditMode = false;
 
-// Local Storage
+// LocalStorage Begin
 function getItemsFromStorage() {
   try {
-    // To catch Syntax Error Unexpected t... 'o' in JSON if double objects are in localStorage
+    // To catch Syntax Error Unexpected t... 'o' in JSON || if double objects are in localStorage
     let itemsFromStorage;
     if (localStorage.getItem("items") == null) {
       itemsFromStorage = [];
@@ -35,10 +35,14 @@ function addItemsToStorage(item) {
   localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
 
+// FIX
 function checkIfItemwExists(item) {
   const itemsFromStorage = getItemsFromStorage();
-  itemsFromStorage.map((i) => shallowEqual(item, i));
-  return;
+  const result = itemsFromStorage.forEach((i) => {
+    if (shallowEqual(i, item)) {
+      return true;
+    }
+  });
 }
 
 function removeItemFromStorage(item) {
@@ -56,7 +60,7 @@ function displayFromStorage() {
   });
   checkTable();
 }
-// END
+// LocalStorage END
 
 function zipToObject(item) {
   const values = item.textContent.trim().split(" ");
@@ -147,6 +151,7 @@ function addItem(e) {
       return;
     }
   }
+  console.log(checkIfItemwExists(inputs));
   onAddItemDOM(inputs);
   addItemsToStorage(inputs);
 
