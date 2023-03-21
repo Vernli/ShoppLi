@@ -38,11 +38,12 @@ function addItemsToStorage(item) {
 // FIX
 function checkIfItemwExists(item) {
   const itemsFromStorage = getItemsFromStorage();
-  const result = itemsFromStorage.forEach((i) => {
+  for (i of itemsFromStorage) {
     if (shallowEqual(i, item)) {
       return true;
     }
-  });
+  }
+  return false;
 }
 
 function removeItemFromStorage(item) {
