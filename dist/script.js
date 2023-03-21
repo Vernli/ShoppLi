@@ -9,6 +9,55 @@ const formBtn = document.getElementById("formBtn");
 
 let isEditMode = false;
 
+// Local Storage
+function getItemsFromStorage() {
+  try {
+    // To catch Syntax Error Unexpected t... 'o' in JSON if double objects are in localStorage
+    let itemsFromStorage;
+    if (localStorage.getItem("items") == null) {
+      itemsFromStorage = [];
+    } else {
+      itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+    }
+    return itemsFromStorage;
+  } catch (e) {
+    itemsFromStorage.clear();
+  }
+}
+function addItemsToStorage(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  console.log(item);
+
+  // Add new item to the storage
+  itemsFromStorage.push(item);
+
+  // Convert JSON string and set to local storage
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
+function checkIfItemwExists(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.map((i) => shallowEqual(item, i));
+  return;
+}
+
+function removeItemFromStorage(item) {
+  let itemsFromStorage = getItemsFromStorage();
+  // Filter out item to be removed
+  itemsFromStorage = itemsFromStorage.filter((i) => !shallowEqual(i, item));
+  // Re-set to local storage
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
+function displayFromStorage() {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.forEach((item) => {
+    onAddItemDOM(item);
+  });
+  checkTable();
+}
+// END
+
 function zipToObject(item) {
   const values = item.textContent.trim().split(" ");
   return { item: values[0], quantify: values[1] };
@@ -74,50 +123,6 @@ function checkTable() {
 function checkItems() {
   return document.querySelectorAll(".item").length;
 }
-// Get items from storage
-function getItemsFromStorage() {
-  let itemsFromStorage;
-  if (localStorage.getItem("items") == null) {
-    itemsFromStorage = [];
-  } else {
-    itemsFromStorage = JSON.parse(localStorage.getItem("items"));
-  }
-  return itemsFromStorage;
-}
-// Local Storage
-function addItemsToStorage(item) {
-  const itemsFromStorage = getItemsFromStorage();
-  console.log(item);
-
-  // Add new item to the storage
-  itemsFromStorage.push(item);
-
-  // Convert JSON string and set to local storage
-  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
-}
-
-function checkIfItemwExists(item) {
-  const itemsFromStorage = getItemsFromStorage();
-  itemsFromStorage.map((i) => shallowEqual(item, i));
-  return;
-}
-
-function removeItemFromStorage(item) {
-  let itemsFromStorage = getItemsFromStorage();
-  // Filter out item to be removed
-  itemsFromStorage = itemsFromStorage.filter((i) => !shallowEqual(i, item));
-  // Re-set to local storage
-  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
-}
-
-function displayFromStorage() {
-  const itemsFromStorage = getItemsFromStorage();
-  itemsFromStorage.forEach((item) => {
-    onAddItemDOM(item);
-  });
-  checkTable();
-}
-// END
 
 // Add Item
 function addItem(e) {
