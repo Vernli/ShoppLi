@@ -218,7 +218,7 @@ function editItem(item) {
 function onClickItem(e) {
   if (e.target.classList.contains("remove-item")) {
     removeItem(e.target.parentElement.parentElement.parentElement);
-  } else {
+  } else if (e.target.classList.contains("edit-item")) {
     editItem(e.target.parentElement.parentElement.parentElement);
   }
 }
